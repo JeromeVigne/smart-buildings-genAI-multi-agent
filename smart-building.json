@@ -1,0 +1,164 @@
+{
+    "building": {
+      "name": "HQ",
+      "address": "27 avenue de Tourville, Paris, France",
+      "description": "Headquarters of the company. Located in Paris France, this is a three floor corporate building with sales, fincance and engineering.",
+      "floors": [
+        {
+          "floor_number": 1,
+          "occupancy": 50,
+          "roles": [
+            {
+              "role": "Finance",
+              "count": 10
+            },
+            {
+              "role": "Engineering",
+              "count": 40
+            }
+          ],
+          "hvac_settings": {
+            "temperature": 22,
+            "humidity": 45,
+            "mode": "cooling"
+          }
+        },
+        {
+          "floor_number": 2,
+          "occupancy": 40,
+          "roles": [
+            {
+              "role": "Sales",
+              "count": 10
+            },
+            {
+              "role": "Finance",
+              "count": 10
+            },
+            {
+              "role": "Engineering",
+              "count": 20
+            }
+          ],
+          "hvac_settings": {
+            "temperature": 21,
+            "humidity": 50,
+            "mode": "cooling"
+          }
+        },
+        {
+          "floor_number": 3,
+          "occupancy": 30,
+          "roles": [
+            {
+              "role": "Sales",
+              "count": 25
+            },
+            {
+              "role": "Finance",
+              "count": 5
+            }
+          ],
+          "hvac_settings": {
+            "temperature": 23,
+            "humidity": 40,
+            "mode": "cooling"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "building": {
+      "name": "Production",
+      "address": "Hochallee 27, Hamburg, Germany",
+      "description": "Production facility located in Hamburg, Germany. This is a two floor building with production, logistics and finance. The production floor contains a lot of specialized machinery. This site has likely the highest energy consumption impact out of all our global sites.",
+      "floors": [
+        {
+          "floor_number": 1,
+          "occupancy": 300,
+          "roles": [
+            {
+              "role": "Production",
+              "count": 260
+            },
+            {
+              "role": "Engineering",
+              "count": 40
+            }
+          ],
+          "hvac_settings": {
+            "temperature": 22,
+            "humidity": 45,
+            "mode": "heating"
+          }
+        },
+        {
+          "floor_number": 2,
+          "occupancy": 120,
+          "roles": [
+            {
+              "role": "Production",
+              "count": 20
+            },
+            {
+              "role": "Logicstics",
+              "count": 80
+            },
+            {
+              "role": "Finance",
+              "count": 20
+            }
+          ],
+          "hvac_settings": {
+            "temperature": 21,
+            "humidity": 50,
+            "mode": "heating"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "building": {
+      "name": "Research",
+      "address": "75 Fulton Street, Boston, MA, USA",
+      "description": "Research facility located in Boston, MA, USA. This is a two floor building with research, engineering and sales. The research floor contains expensive lab machinery.",
+      "floors": [
+        {
+          "floor_number": 1,
+          "occupancy": 120,
+          "roles": [
+            {
+              "role": "Engineering",
+              "count": 120
+            }
+          ],
+          "hvac_settings": {
+            "temperature": 22,
+            "humidity": 45,
+            "mode": "heating"
+          }
+        },
+        {
+          "floor_number": 2,
+          "occupancy": 17,
+          "roles": [
+            {
+              "role": "Logicstics",
+              "count": 5
+            },
+            {
+              "role": "Sales",
+              "count": 12
+            }
+          ],
+          "hvac_settings": {
+            "temperature": 21,
+            "humidity": 50,
+            "mode": "heating"
+          }
+        }
+      ]
+    }
+  }

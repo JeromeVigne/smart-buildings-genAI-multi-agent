@@ -1,0 +1,40 @@
+
+
+
+  az cosmosdb sql role assignment create --resource-group "Schneider-demo-assets" --account-name "demo-smart-city-jerome" --role-definition-id "/subscriptions/3817d952-300e-4fc7-b41b-37764acbf785/resourceGroups/Schneider-demo-assets/providers/Microsoft.DocumentDB/databaseAccounts/demo-smart-city-jerome/sqlRoleDefinitions/37e2fea0-22bd-4e02-9bf1-75cb8ae6beb3" --principal-id "07008626-7815-4774-a651-fb5ea2be508d" --scope "/subscriptions/3817d952-300e-4fc7-b41b-37764acbf785/resourceGroups/Schneider-demo-assets/providers/Microsoft.DocumentDB/databaseAccounts/demo-smart-city-jerome"
+
+
+Changes:
+!!multi-agent service:
+Define Agents 161:
+    - triage agent
+    - weather forecast agent
+    - energy mix agent
+    - building info agent
+    - set HVAC agent
+
+CosmosDB tables:
+    - Buildings digital twins
+
+Modify product_information to building_information
+
+Delete:
+    - refund
+    - notify users
+    - oder item
+
+!!ai_chat_bot:
+    - agent_map
+
+!!azure_cosmos_db:
+Delete:
+    - create_database
+    - add_user
+    - add_purchase
+    - add_product
+    - initialize_databas
+
+
+ADD:
+weather
+energy_mix
