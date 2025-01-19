@@ -1,9 +1,13 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_power_breakdown(zone):
     url = "https://api.electricitymap.org/v3/power-breakdown/history"
     headers = {
-        "auth-token": "IRuGMMxLsx7AV"
+        "auth-token": os.environ("ELECTRICITY_MAP_API_KEY")
     }
     params = {
         "zone": zone
