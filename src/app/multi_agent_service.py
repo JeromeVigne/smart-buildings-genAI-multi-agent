@@ -3,9 +3,9 @@ import random
 
 from swarm.repl.repl import process_and_print_streaming_response, pretty_print_messages
 
-import azure_cosmos_db
+import t_building_skills
 import azure_open_ai
-import t_energy_mix
+import t_energy_skills
 from swarm import Swarm, Agent
 from swarm.repl import run_demo_loop
 
@@ -20,15 +20,15 @@ def building_information(user_prompt):
     Takes as input the user prompt as a string."""
     # Perform a vector search on the Cosmos DB container and return results to the agent
     vectors = azure_open_ai.generate_embedding(user_prompt)
-    vector_search_results = vector_search(azure_cosmos_db.buildings_container_name, vectors)
+    vector_search_results = vector_search(t_building_skills.buildings_container_name, vectors)
     return vector_search_results
 
 
 # Perform a vector search on the Cosmos DB container
 def vector_search(container, vectors, similarity_score=0.02, num_results=3):
     # Execute the query
-    database = azure_cosmos_db.client.get_database_client(azure_cosmos_db.database_name)
-    container = database.get_container_client(azure_cosmos_db.buildings_container_name)
+    database = t_building_skills.client.get_database_client(t_building_skills.database_name)
+    container = database.get_container_client(t_building_skills.buildings_container_name)
     results = container.query_items(
         query='''
         SELECT TOP @num_results c.id, c.building, c.address, c.description, c.floors, VectorDistance(c.building_description_vector, @embedding) as SimilarityScore 
@@ -61,13 +61,13 @@ def vector_search(container, vectors, similarity_score=0.02, num_results=3):
     return formatted_results
 
 # Preview tables
-#azure_cosmos_db.preview_table("buildings4")
+#t_building_skills.preview_table("buildings4")
 
 def get_energy_mix(zone):
     """Provide information about energy based on the user prompt.
     Takes as input the user prompt as a string."""
     try:
-        result=t_energy_mix.get_power_breakdown(zone)
+        result=t_energy_skills.get_power_breakdown(zone)
     except Exception as e:
         print(f"An error occurred while retrieving the energy mix: {e}")
     return result
@@ -82,7 +82,7 @@ def set_HVAC(id, floor, mode):
     """Set the HVAC system based on the user prompt.
     Takes as input arguments in the format {'building_id': id, 'floor': floor_number, 'mode': mode}.
     Only confirm success if you get a successful response from the Azure Cosmos DB."""
-    azure_cosmos_db.set_HVAC(id, floor, mode)
+    t_building_skills.set_HVAC(id, floor, mode)
 
 def transfer_to_energy():
     return energy_agent
