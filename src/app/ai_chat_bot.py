@@ -55,12 +55,12 @@ def chat_interface(user_input, agent_name="Triage Agent", messages=None):
 
 
 # Define Gradio UI
-with gr.Blocks(css=".chatbox { background-color: #f9f9f9; border-radius: 10px; padding: 10px; }") as demo:
+with gr.Blocks(css=".chatbox { background-image: url('/bgrnd.jpg') ; background-size: cover; border-radius: 10px; padding: 10px; }") as demo:
     gr.Markdown(
         """
         # Schneider Building AI Assistant
         Welcome to your Building AI Assistant. 
-        Get help with soptimizing energy consumption!
+        Get help with soptimizing energy consumption for your buildings!
         """,
         elem_id="header",
     )
