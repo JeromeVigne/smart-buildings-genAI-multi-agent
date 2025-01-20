@@ -12,6 +12,8 @@ from swarm.repl import run_demo_loop
 # Initialize Swarm client with Azure OpenAI client
 swarm_client = Swarm(client=azure_open_ai.aoai_client)
 
+
+
 #modify to become building agent
 def building_information(user_prompt):
     """Provide information about a building based on the user prompt.
@@ -29,7 +31,7 @@ def vector_search(container, vectors, similarity_score=0.02, num_results=3):
     container = database.get_container_client(azure_cosmos_db.buildings_container_name)
     results = container.query_items(
         query='''
-        SELECT TOP @num_results c.building, c.address, c.description, c.floors, VectorDistance(c.building_description_vector, @embedding) as SimilarityScore 
+        SELECT TOP @num_results c.id, c.building, c.address, c.description, c.floors, VectorDistance(c.building_description_vector, @embedding) as SimilarityScore 
         FROM c
         WHERE VectorDistance(c.building_description_vector,@embedding) > @similarity_score
         ORDER BY VectorDistance(c.building_description_vector,@embedding)
@@ -59,7 +61,7 @@ def vector_search(container, vectors, similarity_score=0.02, num_results=3):
     return formatted_results
 
 # Preview tables
-#azure_cosmos_db.preview_table("buidings2")
+#azure_cosmos_db.preview_table("buildings4")
 
 def get_energy_mix(zone):
     """Provide information about energy based on the user prompt.
@@ -76,11 +78,11 @@ def get_weather(user_prompt):
     result = 20
     return result
 
-def set_HVAC(user_prompt):
+def set_HVAC(id, floor, mode):
     """Set the HVAC system based on the user prompt.
-     Takes as input arguments in the format {'building': building_name, 'floor': floor_number, 'mode': mode}."""
-    result = "success"
-    return result
+    Takes as input arguments in the format {'building_id': id, 'floor': floor_number, 'mode': mode}.
+    Only confirm success if you get a successful response from the Azure Cosmos DB."""
+    azure_cosmos_db.set_HVAC(id, floor, mode)
 
 def transfer_to_energy():
     return energy_agent
@@ -112,7 +114,7 @@ weather_agent = Agent(
 energy_agent = Agent(
     name="Energy Agent",
     instructions="""You are am energy agent that can handle requests about the current and forecasted energy mix in a certain region.
-    To give information about energy mix, you always need a zone. The zone is a geographical area that you can infer from the building location. For example, if the building is in Paris, France, the zone is FR. For Germany it will be DE, for Boston it would be ISO-NE-ISNE.
+    To give information about energy mix, you always need a zone. The zone is a geographical area that you can infer from the building location. For example, if the building is in Paris, France, the zone is FR. For Germany it will be DE, for Boston it would be US-NE-ISNE, for Danemark use DK.
     If the user asks about building information, transfer to the Building Agent.
     If the user asks you a question you cannot answer, transfer back to the triage agent.""",
     functions=[transfer_to_triage, get_energy_mix, transfer_to_building],
@@ -126,7 +128,7 @@ building_agent = Agent(
     Only give the user very basic information about the building; the building name, a very short description and if the HVAC mode is cooling, heating or OFF. If the HVAC settings mode varies by floor, share the information by floor.
     The building_information returns data about it's current occupancy by job role and floor, as well as HVAC settings by floor. If the user asks for it, share that information in an agregate form.
     If the user asks for floor occupancy optimization, fell free to recommend moving people between floors. For example if one floor is almost empy, recommend moving these people to the other floor and turning OFF the HVAC.
-    If you or the user make recommendation about changing the HVAC settings, call the set_HVAC function.
+    If you or the user make recommendation about changing the HVAC settings, call the set_HVAC function, make sure you call it with the building id, floor and mode. Before you call this fuction, ask the user to confirm.
     If the user asks about weather, transfer to the Weather Agent.
     If the user asks about energy mix, transfer to the Energy Mix Agent.
     If the user asks you a question you cannot answer, transfer back to the triage agent.

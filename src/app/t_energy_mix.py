@@ -4,10 +4,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+key = os.environ['ENERGY_MIX_API_KEY']
+
 def get_power_breakdown(zone):
     url = "https://api.electricitymap.org/v3/power-breakdown/history"
     headers = {
-        "auth-token": os.environ("ELECTRICITY_MAP_API_KEY")
+        "auth-token": key
     }
     params = {
         "zone": zone
