@@ -1,33 +1,33 @@
-# Multi-agent AI sample with Azure Cosmos DB
+# Multi-agent AI sample for smart building
 
-A sample personal shopping AI Chatbot that can help with product enquiries, making sales, and refunding orders by transferring to different agents for those tasks.
+This repo contains a sample implementation of a multi-agent approach to helping optimize resources and planning for smart buildings.
+
+It was built upon the work from [@TheovanKray](https://github.com/TheovanKraay): [LINK](https://github.com/AzureCosmosDB/multi-agent-swarm).
+
+The agents can access and reason over:
+- Digital twins of buildings sample json [here](https://github.com/JeromeVigne/smart-buildings-genAI-multi-agent/blob/main/smart-building.json).
+- Real-time energy information from [ELECTRICITY MAPS](https://app.electricitymaps.com/map/12mo).
+- Weather information.
+
 
 Features:
 - **Multi-agent**: [OpenAI Swarm](https://github.com/openai/swarm) to orchestrate multi-agent interactions with [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) API calls.
-- **Transactional data management**: planet scale [Azure Cosmos DB database service](https://learn.microsoft.com/azure/cosmos-db/introduction) to store transactional user and product operational data.
-- **Retrieval Augmented Generation (RAG)**: [vector search](https://learn.microsoft.com/azure/cosmos-db/nosql/vector-search) in Azure Cosmos DB with powerful [DiskANN index](https://www.microsoft.com/en-us/research/publication/diskann-fast-accurate-billion-point-nearest-neighbor-search-on-a-single-node/?msockid=091c323873cd6bd6392120ac72e46a98) to serve product enquiries from the same database.
+- **Transactional data management**: planet scale [Azure Cosmos DB database service](https://learn.microsoft.com/azure/cosmos-db/introduction) to store digital twins of buildings unsing the NoSQL APIs for documents.
+- **Retrieval Augmented Generation (RAG)**: [vector search](https://learn.microsoft.com/azure/cosmos-db/nosql/vector-search) in Azure Cosmos DB with powerful [DiskANN index](https://www.microsoft.com/en-us/research/publication/diskann-fast-accurate-billion-point-nearest-neighbor-search-on-a-single-node/?msockid=091c323873cd6bd6392120ac72e46a98) to help search unstructured data about the building characteristics..
 - **Gradio UI**: [Gradio](https://www.gradio.app/) to provide a simple UI ChatBot for the end-user.
 
-## Backend agent activity
 
-Run the CLI interactive session to see the agent handoffs in action...
+![img](./src/img/smart-building2.jpg)
 
-![Demo](./media/demo-cli.gif)
-
-## Front-end AI chat bot
-
-Run the AI chat bot for the end-user experience...
-
-![Demo](./media/demo-chatbot.gif)
 
 ## Overview
 
-The personal shopper example includes four main agents to handle various customer service requests:
+This contains four main agents:
 
 1. **Triage Agent**: Determines the type of request and transfers to the appropriate agent.
-2. **Product Agent**: Answers customer queries from the products container using [Retrieval Augmented Generation (RAG)](https://learn.microsoft.com/azure/cosmos-db/gen-ai/rag).
-2. **Refund Agent**: Manages customer refunds, requiring both user ID and item ID to initiate a refund.
-3. **Sales Agent**: Handles actions related to placing orders, requiring both user ID and product ID to complete a purchase.
+2. **Building Agent**: Answers questions about building characteristics, current occupancy, HVAC settings. It can also update the HVAC settings.
+2. **Energy Mix Agent**: Gets the current energy mix for a certain region (type of energy source and renewable mix).
+3. **Weather Agent**: Gets the weather forecast for a certain location, to help anticipate HVAC settings and energy consumption in the future.
 
 ## Prerequisites
 
@@ -36,13 +36,6 @@ The personal shopper example includes four main agents to handle various custome
 - [Azure OpenAI Embedding Deployment ID](https://learn.microsoft.com/azure/ai-services/openai/overview) for the RAG model.
 
 ## Setup
-
-Clone the repository:
-
-```shell
-git clone https://github.com/AzureCosmosDB/multi-agent-swarm
-cd multi-agent-swarm
-```
 
 Install dependencies:
 
@@ -59,6 +52,9 @@ AZURE_COSMOSDB_KEY=your_cosmosdb_account_key
 AZURE_OPENAI_API_KEY=your_azure_openai_api_key
 AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
 AZURE_OPENAI_EMBEDDINGDEPLOYMENTID=your_azure_openai_embeddingdeploymentid
+ENERGY_MIX_API_KEY=your_api_key
+WEATHER_API_KEY=your_api_key
+
 ```
 
 Once you have installed dependencies, run below and click on url provided in output:
