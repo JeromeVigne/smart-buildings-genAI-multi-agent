@@ -7,7 +7,7 @@ It was built upon the work from [@TheovanKray](https://github.com/TheovanKraay):
 The agents can access and reason over:
 - Digital twins of buildings sample json [here](https://github.com/JeromeVigne/smart-buildings-genAI-multi-agent/blob/main/smart-building.json).
 - Real-time energy information from [ELECTRICITY MAPS](https://app.electricitymaps.com/map/12mo).
-- Weather information.
+- Weather information from [HERE](https://www.weatherapi.com/).
 
 
 Features:
@@ -34,6 +34,10 @@ This contains four main agents:
 - [Azure Cosmos DB account](https://learn.microsoft.com/azure/cosmos-db/create-cosmosdb-resources-portal) - ensure the [vector search](https://learn.microsoft.com/azure/cosmos-db/nosql/vector-search) feature is enabled.
 - [Azure OpenAI API key](https://learn.microsoft.com/azure/ai-services/openai/overview) and endpoint.
 - [Azure OpenAI Embedding Deployment ID](https://learn.microsoft.com/azure/ai-services/openai/overview) for the RAG model.
+- You need to upload your document to a CosmosDB Account, select CosmosDb for NoSQL, create a container to upload your items. Make sure the container has Vector embedding pointing to the building_description_vector using the DISKANN index. You can use u_buildings.py to upload building digital twins.
+- You need to create a local .env file or run the below shell to set your variables.
+- Get an api key at [ELECTRICITY MAPS](https://app.electricitymaps.com/map/12mo)
+- GEt an api key at [HERE](https://www.weatherapi.com/).
 
 ## Setup
 
