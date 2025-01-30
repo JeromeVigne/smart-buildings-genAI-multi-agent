@@ -30,7 +30,7 @@ def chat_interface(user_input, agent_name="Triage Agent", messages=None):
         agent=agent,
         messages=messages,
         context_variables={},
-        stream=False,  # Set True for streaming support
+        stream=True,  # Set True for streaming support
         debug=False,
     )
 

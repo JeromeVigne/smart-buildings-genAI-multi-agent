@@ -3,9 +3,10 @@ import random
 
 from swarm.repl.repl import process_and_print_streaming_response, pretty_print_messages
 
-import t_building_skills
 import azure_open_ai
+import t_building_skills
 import t_energy_skills
+import t_weather_skills
 from swarm import Swarm, Agent
 from swarm.repl import run_demo_loop
 
@@ -72,10 +73,13 @@ def get_energy_mix(zone):
         print(f"An error occurred while retrieving the energy mix: {e}")
     return result
 
-def get_weather(user_prompt):
+def get_weather(location):
     """Provide information about weather based on the user prompt.
     Takes as input the user prompt as a string."""
-    result = 20
+    try:
+        result=t_weather_skills.get_weather(location)
+    except Exception as e:
+        print(f"An error occurred while retrieving the energy mix: {e}")
     return result
 
 def set_HVAC(id, floor, mode):
@@ -105,10 +109,12 @@ def transfer_to_triage():
 weather_agent = Agent(
     name="Weather Agent",
     instructions="""You are a weather agent that handles all actions related to weather related questions.
-    You must ask for a location. 
-    If timeframe is present in the context information, use it. 
+    When calling the get_weather function you must pass a location. The location is a city name. If you cannot infer the city name based on the context ask for it.
+    If timeframe is present in the context information, use it in your response. The API returns a 5 day forecast, so if the date is too far out, let the user know that you can only get weather data up to 5 days from now.
+    If the user wants to adjust HVAC, transfer to the building agent.
+    If the user asks about building information, transfer to the Building Agent.
     If the user asks you a question you cannot answer, transfer back to the triage agent.""",
-    functions=[transfer_to_triage, get_weather],
+    functions=[transfer_to_triage, get_weather, transfer_to_building],
 )
 
 energy_agent = Agent(
@@ -123,15 +129,14 @@ energy_agent = Agent(
 building_agent = Agent(
     name="Building Agent",
     instructions="""You are a building agent that provides information about buildings in the database.
-    When calling the building_information function, do not make any assumptions 
-    about the building name. Instead, use the building name from the response to building_information. 
+    When calling the building_information function you must pass a user prompt. The user prompt is a string that the user has entered. Use this string to search for relevant information in the database.
     Only give the user very basic information about the building; the building name, a very short description and if the HVAC mode is cooling, heating or OFF. If the HVAC settings mode varies by floor, share the information by floor.
     The building_information returns data about it's current occupancy by job role and floor, as well as HVAC settings by floor. If the user asks for it, share that information in an agregate form.
-    If the user asks for floor occupancy optimization, fell free to recommend moving people between floors. For example if one floor is almost empy, recommend moving these people to the other floor and turning OFF the HVAC.
-    If you or the user make recommendation about changing the HVAC settings, call the set_HVAC function, make sure you call it with the building id, floor and mode. Before you call this fuction, ask the user to confirm.
+    If you or the user make recommendations about changing the HVAC settings, call the set_HVAC function, make sure you call it with the building id, floor and mode. Before you call this fuction, ask the user to confirm.
     If the user asks about weather, transfer to the Weather Agent.
-    If the user asks about energy mix, transfer to the Energy Mix Agent.
+    If the user asks about energy mix, transfer to the Energy Mix Agent, this agent needs a zone to provide information. The zone is based on the city of the building.
     If the user asks you a question you cannot answer, transfer back to the triage agent.
+    If the user asks for floor occupancy optimization, fell free to recommend moving people between floors. For example if one floor is almost empy, recommend moving these people to the other floor. Do not try to call a function for relocating employees.
     """,
     functions=[transfer_to_triage, building_information, transfer_to_energy, transfer_to_weather, set_HVAC],
     add_backlinks=True,
@@ -144,10 +149,11 @@ triage_agent = Agent(
     You dont need to know specifics, just the topic of the request.
     If the user asks for weather information, transfer to the Weather Agent.
     If the user request is about adjusting building or HVAC settings, transfer to the Building Agent.
-    If the user request is about building informations, occupancy, addresses, tansfer to the Building Agent.
+    If the user request is about building informations, production, occupancy, addresses, tansfer to the Building Agent.
     If the user request is about energy mix, transfer to the Energy Mix Agent.
     When you need more information to triage the request to an agent, ask a direct question without explaining why you're asking it.
-    Do not share your thought process with the user! Do not make unreasonable assumptions on behalf of user.""",
+    If the user asks questions that is pertinent to building information and energy mix or weather, decompose the task into steps and transfer each step to the right agent.
+    Once each step is exectued, reason about the results to help the user with the final answer.""",
     agents=[energy_agent, building_agent, weather_agent],
     functions=[transfer_to_energy, transfer_to_weather, transfer_to_building],
     add_backlinks=True,

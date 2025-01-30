@@ -36,8 +36,3 @@ def get_power_breakdown(zone):
         print(f"An error occurred: {response.status_code} - {response.text}")
         return None
 
-# Example usage
-zone = "FR"  # Replace with the desired zone
-latest_data = get_power_breakdown(zone)
-if latest_data:
-    print(latest_data)
